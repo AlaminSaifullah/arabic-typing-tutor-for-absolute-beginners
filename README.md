@@ -1,20 +1,4 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+_This tutorial app was entirely created using Google AI Studio_.
 
-# Run and deploy your AI Studio app
-
-This contains everything you need to run your app locally.
-
-View your app in AI Studio: https://ai.studio/apps/drive/1O0tK8YWt57miykg2klXHZ9H8xnAaL9cz
-
-## Run Locally
-
-**Prerequisites:**  Node.js
-
-
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+I thought of this app when I was trying to learn traditional Arabic keyboard, but couldn't find any good practice platform. There may be some, but I couldn't find any. Personally I managed to learn Arabic typing using this app, so it may be helpful for others as well. 
+Vowels, sukoon and tashdeed do exist, but aren't rendered correctly for some reason. I didn't bother fixing it, because I shifted to a phonetic keyboard designed by Omar Al Zabir. You can find the keyboard here https://arabic.omaralzabir.com/
