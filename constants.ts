@@ -3,56 +3,56 @@ import { KeyMap, KeyboardRow, Lesson } from './types';
 // Standard Arabic 101 Layout Mapping
 // Maps physical key codes (QWERTY positions) to Arabic Characters
 export const ARABIC_KEY_MAP: KeyMap = {
-  Backquote: { char: 'ذ' },
-  Digit1: { char: '1' },
-  Digit2: { char: '2' },
-  Digit3: { char: '3' },
-  Digit4: { char: '4' },
-  Digit5: { char: '5' },
-  Digit6: { char: '6' },
-  Digit7: { char: '7' },
-  Digit8: { char: '8' },
-  Digit9: { char: '9' },
-  Digit0: { char: '0' },
-  Minus: { char: '-' },
-  Equal: { char: '=' },
+  Backquote: { char: 'ذ', shiftChar: 'ّ' }, // Tashdid
+  Digit1: { char: '1', shiftChar: '!' },
+  Digit2: { char: '2', shiftChar: '@' },
+  Digit3: { char: '3', shiftChar: '#' },
+  Digit4: { char: '4', shiftChar: '$' },
+  Digit5: { char: '5', shiftChar: '%' },
+  Digit6: { char: '6', shiftChar: '^' },
+  Digit7: { char: '7', shiftChar: '&' },
+  Digit8: { char: '8', shiftChar: '*' },
+  Digit9: { char: '9', shiftChar: '(' },
+  Digit0: { char: '0', shiftChar: ')' },
+  Minus: { char: '-', shiftChar: '_' },
+  Equal: { char: '=', shiftChar: '+' },
   
-  KeyQ: { char: 'ض' },
-  KeyW: { char: 'ص' },
-  KeyE: { char: 'ث' },
-  KeyR: { char: 'ق' },
-  KeyT: { char: 'ف' },
-  KeyY: { char: 'غ' },
-  KeyU: { char: 'ع' },
-  KeyI: { char: 'ه' },
-  KeyO: { char: 'خ' },
-  KeyP: { char: 'ح' },
-  BracketLeft: { char: 'ج' },
-  BracketRight: { char: 'د' },
-  Backslash: { char: '\\' },
+  KeyQ: { char: 'ض', shiftChar: 'َ' }, // Fatha
+  KeyW: { char: 'ص', shiftChar: 'ً' }, // Fathatayn
+  KeyE: { char: 'ث', shiftChar: 'ُ' }, // Damma
+  KeyR: { char: 'ق', shiftChar: 'ٌ' }, // Dammatayn
+  KeyT: { char: 'ف', shiftChar: 'لإ' },
+  KeyY: { char: 'غ', shiftChar: 'إ' },
+  KeyU: { char: 'ع', shiftChar: '‘' },
+  KeyI: { char: 'ه', shiftChar: '÷' },
+  KeyO: { char: 'خ', shiftChar: '×' },
+  KeyP: { char: 'ح', shiftChar: '؛' },
+  BracketLeft: { char: 'ج', shiftChar: '<' },
+  BracketRight: { char: 'د', shiftChar: '>' },
+  Backslash: { char: '\\', shiftChar: '|' },
 
-  KeyA: { char: 'ش' },
-  KeyS: { char: 'س' },
-  KeyD: { char: 'ي' },
-  KeyF: { char: 'ب' },
-  KeyG: { char: 'ل' },
-  KeyH: { char: 'ا' },
-  KeyJ: { char: 'ت' },
-  KeyK: { char: 'ن' },
-  KeyL: { char: 'م' },
-  Semicolon: { char: 'ك' },
-  Quote: { char: 'ط' },
+  KeyA: { char: 'ش', shiftChar: 'ِ' }, // Kasra
+  KeyS: { char: 'س', shiftChar: 'ٍ' }, // Kasratayn
+  KeyD: { char: 'ي', shiftChar: '[' },
+  KeyF: { char: 'ب', shiftChar: ']' },
+  KeyG: { char: 'ل', shiftChar: 'لأ' },
+  KeyH: { char: 'ا', shiftChar: 'أ' },
+  KeyJ: { char: 'ت', shiftChar: 'ـ' },
+  KeyK: { char: 'ن', shiftChar: '،' },
+  KeyL: { char: 'م', shiftChar: '/' },
+  Semicolon: { char: 'ك', shiftChar: ':' },
+  Quote: { char: 'ط', shiftChar: '"' },
 
-  KeyZ: { char: 'ئ' },
-  KeyX: { char: 'ء' },
-  KeyC: { char: 'ؤ' },
-  KeyV: { char: 'ر' },
-  KeyB: { char: 'لا' }, 
-  KeyN: { char: 'ى' },
-  KeyM: { char: 'ة' },
-  Comma: { char: 'و' },
-  Period: { char: 'ز' },
-  Slash: { char: 'ظ' },
+  KeyZ: { char: 'ئ', shiftChar: '~' },
+  KeyX: { char: 'ء', shiftChar: 'ْ' }, // Sukun
+  KeyC: { char: 'ؤ', shiftChar: '{' },
+  KeyV: { char: 'ر', shiftChar: '}' },
+  KeyB: { char: 'لا', shiftChar: 'لآ' }, 
+  KeyN: { char: 'ى', shiftChar: 'آ' },
+  KeyM: { char: 'ة', shiftChar: '’' },
+  Comma: { char: 'و', shiftChar: ',' },
+  Period: { char: 'ز', shiftChar: '.' },
+  Slash: { char: 'ظ', shiftChar: '؟' },
   Space: { char: ' ', label: 'مسافة' },
 };
 
@@ -162,5 +162,26 @@ export const LESSONS: Lesson[] = [
     description: "Mastering the top numerical row.",
     text: "١ ٢ ٣ ٤ ٥ ٦ ٧ ٨ ٩ ٠ سنة ١٩٩٠ و ٢٠٢٣ رقم الهاتف ٠٥٠١٢٣٤٥٦٧ السعر ١٠٠ ريال",
     keys: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0']
+  },
+  {
+    id: 13,
+    title: "Lesson 13: Basic Vowels (Harakat)",
+    description: "Introduction to Fatha ( َ ), Damma ( ُ ), and Kasra ( ِ ).",
+    text: "بَ بُ بِ تً تٌ تٍ كَتَبَ كُتِبَ يَشْرَبُ بِنْتٌ سَمِعَ عَلِمَ",
+    keys: ['َ', 'ُ', 'ِ', 'ً', 'ٌ', 'ٍ']
+  },
+  {
+    id: 14,
+    title: "Lesson 14: Sukun and Tashdid",
+    description: "Mastering the Sukun ( ْ ) and Tashdid ( ّ ).",
+    text: "مَدْرَسَةٌ مَكْتَبٌ بَيْتٌ رَبِّي جَدِّي قِطَّةٌ مُعَلِّمٌ سُكُونٌ تَشْدِيدٌ",
+    keys: ['ْ', 'ّ']
+  },
+  {
+    id: 15,
+    title: "Lesson 15: Advanced Vowel Practice",
+    description: "Sentences with full vocalization for maximum accuracy.",
+    text: "الْوَلَدُ يَلْعَبُ فِي الْحَدِيقَةِ. ذَهَبَتِ الْبِنْتُ إِلَى الْمَدْرَسَةِ. هَذَا كِتَابٌ جَمِيلٌ جِدًّا.",
+    keys: []
   }
 ];

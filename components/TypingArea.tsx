@@ -5,7 +5,7 @@ interface TypingAreaProps {
   targetText: string;
   userInput: string;
   isError: boolean;
-  onInput: (char: string, code: string) => void;
+  onInput: (char: string, code: string, shiftKey: boolean) => void;
   onBlur: () => void;
   onFocus: () => void;
   isZenMode: boolean;
@@ -38,7 +38,7 @@ export const TypingArea: React.FC<TypingAreaProps> = ({
   }, []);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    onInput(e.key, e.code);
+    onInput(e.key, e.code, e.shiftKey);
   };
 
   return (

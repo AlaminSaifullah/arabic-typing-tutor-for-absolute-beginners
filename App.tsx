@@ -14,7 +14,40 @@ const App: React.FC = () => {
   const [pressedKey, setPressedKey] = useState<string | null>(null);
   const [isZenMode, setIsZenMode] = useState(false);
   const [isStrictMode, setIsStrictMode] = useState(true);
+  const [isShiftPressed, setIsShiftPressed] = useState(false);
   
+  // Audio Context for feedback sounds
+  const playSound = useCallback((type: 'correct' | 'error') => {
+    try {
+      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      
+      if (type === 'correct') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(880, ctx.currentTime);
+        gain.gain.setValueAtTime(0.08, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.08);
+      } else {
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(110, ctx.currentTime);
+        gain.gain.setValueAtTime(0.08, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.15);
+      }
+    } catch {
+      // Audio might be blocked by browser autoplay policy until interaction
+    }
+  }, []);
+
   // Stats State
   const [startTime, setStartTime] = useState<number | null>(null);
   const [errorCount, setErrorCount] = useState(0); // Tracks raw error events (Strict) or wrong chars (Forgiving)
@@ -78,18 +111,31 @@ const App: React.FC = () => {
     // Focus reset or cleanup if needed
   };
 
-  // Zen Mode Escape Listener
+  // Global Keyboard Listener for Shift and Key Release
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && isZenMode) {
         setIsZenMode(false);
       }
+      if (e.key === 'Shift') {
+        setIsShiftPressed(true);
+      }
+    };
+    const handleKeyUp = (e: KeyboardEvent) => {
+      if (e.key === 'Shift') {
+        setIsShiftPressed(false);
+      }
+      setPressedKey(null);
     };
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
   }, [isZenMode]);
 
-  const handleInput = useCallback((key: string, code: string) => {
+  const handleInput = useCallback((key: string, code: string, shiftKey: boolean) => {
     if (isLessonComplete) return;
 
     if (startTime === null) setStartTime(Date.now());
@@ -108,7 +154,10 @@ const App: React.FC = () => {
     // 1. Try to map physical key to Arabic
     const mapped = ARABIC_KEY_MAP[code];
     // 2. Fallback to key itself (e.g. for numbers/symbols if not mapped or for English keyboard fallback)
-    const inputChar = mapped ? mapped.char : key;
+    let inputChar = key;
+    if (mapped) {
+      inputChar = (shiftKey && mapped.shiftChar) ? mapped.shiftChar : mapped.char;
+    }
     
     const targetChar = currentLesson.text[currentIndex];
     const isCorrect = inputChar === targetChar;
@@ -120,9 +169,11 @@ const App: React.FC = () => {
       if (isCorrect) {
         setUserInput(prev => prev + inputChar);
         setIsError(false);
+        playSound('correct');
       } else {
         setIsError(true);
         setErrorCount(prev => prev + 1);
+        playSound('error');
         setTimeout(() => setIsError(false), 200);
       }
     } else {
@@ -131,19 +182,15 @@ const App: React.FC = () => {
       if (!isCorrect) {
         setErrorCount(prev => prev + 1);
         setIsError(true);
+        playSound('error');
         setTimeout(() => setIsError(false), 200);
       } else {
         setIsError(false);
+        playSound('correct');
       }
     }
 
   }, [currentIndex, currentLesson, isLessonComplete, startTime, isStrictMode]);
-
-  useEffect(() => {
-    const handleKeyUp = () => setPressedKey(null);
-    window.addEventListener('keyup', handleKeyUp);
-    return () => window.removeEventListener('keyup', handleKeyUp);
-  }, []);
 
   // --- Render ---
 
@@ -270,6 +317,11 @@ const App: React.FC = () => {
             {!isZenMode && <Stats stats={stats} />}
 
             <div className={`w-full relative ${isZenMode ? 'max-w-6xl' : 'max-w-4xl'}`}>
+              {/* Shift Indicator */}
+              <div className={`absolute -top-6 right-0 text-xs font-bold transition-all duration-200 ${isShiftPressed ? 'text-emerald-400 opacity-100' : 'text-slate-600 opacity-0'}`} dir="ltr">
+                SHIFT ACTIVE
+              </div>
+
               {!isFocused && !isZenMode && (
                  <div className="absolute -top-8 left-0 right-0 text-center text-amber-500 text-sm font-medium animate-pulse" dir="ltr">
                    ⚠️ Focus lost. Click the box to continue typing.
@@ -292,6 +344,7 @@ const App: React.FC = () => {
                 activeChar={currentLesson.text[currentIndex]}
                 pressedKey={pressedKey}
                 isError={isError}
+                isShiftPressed={isShiftPressed}
               />
             )}
           </>
